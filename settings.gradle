@@ -1,0 +1,2 @@
+rootProject.name = 'SupremePatty'
+enableFeaturePreview('IMPROVED_POM_SUPPORT')

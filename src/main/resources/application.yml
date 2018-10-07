@@ -1,0 +1,5 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://supremepatty-dev.cx6l8v8ssd3p.eu-central-1.rds.amazonaws.com:5432/supremepatty
+    data-password: br5fbmgnH8DKNapG
+    data-username: supremepatty_dev
