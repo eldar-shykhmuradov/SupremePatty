@@ -5,6 +5,7 @@ plugins {
     id 'com.gradle.build-scan' version '1.16'
     id 'org.springframework.boot' version '2.0.5.RELEASE'
     id 'com.bmuschko.docker-remote-api' version '3.6.1' apply true
+    id 'net.ltgt.apt' version '0.10'
 }
 
 
@@ -17,7 +18,12 @@ repositories {
 dependencies {
     implementation 'org.springframework.boot:spring-boot-dependencies:2.0.5.RELEASE'
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    compileOnly 'org.projectlombok:lombok:1.18.4'
+    apt 'org.projectlombok:lombok:1.18.4'
+//    implementation 'org.springframework.boot:spring-boot-starter' try to use autoconfiguration without this dependency
     implementation 'org.springframework.boot:spring-boot-starter-test'
+    compile group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
+    compile "io.springfox:springfox-swagger2:2.9.2"
 
     components {
         withModule('org.springframework:spring-beans') {
