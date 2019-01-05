@@ -1,5 +1,17 @@
 spring:
-  datasource:
-    url: jdbc:postgresql://supremepatty-dev.cx6l8v8ssd3p.eu-central-1.rds.amazonaws.com:5432/supremepatty
-    data-password: br5fbmgnH8DKNapG
-    data-username: supremepatty_dev
+    datasource:
+        driver-class-name: org.postgresql.Driver
+        type: com.zaxxer.hikari.HikariDataSource
+        hikari:
+            minimum-idle: 5
+            maximum-pool-size: 15
+            connection-timeout: 3000000
+            idle-timeout: 600000000
+            max-lifetime: 21331231232
+        url: ${datasource_url}
+        username: ${datasource_username}
+        password: ${datasource_password}
+    jpa:
+        database-platform: org.hibernate.dialect.PostgreSQLDialect
+        hibernate:
+            ddl-auto: none

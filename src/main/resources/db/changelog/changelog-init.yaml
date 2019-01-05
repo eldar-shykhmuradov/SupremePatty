@@ -1,0 +1,252 @@
+databaseChangeLog:
+- changeSet:
+    id: changelog-init
+    author: EldarS
+    objectQuotingStrategy: LEGACY
+    changes:
+    - sql:
+        splitStatements: true
+        sql: CREATE TYPE party_status AS ENUM ('ACTIVE','DEACTIVATED')
+        stripComments: false
+    - createTable:
+        tableName: party
+        columns:
+        - column:
+            name: id
+            type: int
+            constraints:
+              primaryKey: true
+              unique: true
+              autoincrement: true
+        - column:
+            name: description
+            type: varchar(200)
+        - column:
+            name: address
+            type: varchar(200)
+            constraints:
+              nullable: false
+              primaryKey: true
+        - column:
+            name: latitude
+            type: double
+            constraints:
+              nullable: false
+        - column:
+            name: status
+            type: party_status
+            constraints:
+              nullable: false
+        - column:
+            name: longitude
+            type: double
+            constraints:
+              nullable: false
+        - column:
+            name: create_timestamp
+            type: timestamp
+            defaultValueComputed: now()
+            constraints:
+              nullable: false
+        - column:
+            name: update_timestamp
+            type: timestamp
+
+    - createTable:
+        tableName: user
+        columns:
+        - column:
+            name: id
+            type: int
+            constraints:
+              primaryKey: true
+        - column:
+            name: first_name
+            type: varchar(100)
+            constraints:
+              nullable: false
+        - column:
+            name: last_name
+            type: varchar(100)
+        - column:
+            name: create_timestamp
+            type: timestamp
+            defaultValueComputed: now()
+            constraints:
+              ullable: false
+        - column:
+            name: vk_link
+            type: varchar(200)
+        - column:
+            name: telegram_link
+            type: varchar(200)
+        - column:
+            name: instagram_link
+            type: varchar(200)
+
+    - createTable:
+        tableName: party_image
+        columns:
+        - column:
+            name: id
+            type: int
+            constraints:
+              primaryKey: true
+        - column:
+            name: party_id
+            type: int
+        - column:
+            name: url
+            type: varchar(200)
+            constraints:
+              nullable: false
+        - column:
+            name: order
+            type: int
+            constraints:
+              nullable: false
+
+    - createTable:
+        tableName: user_image
+        columns:
+        - column:
+            name: id
+            type: int
+            constraints:
+              primaryKey: true
+        - column:
+            name: user_id
+            type: int
+        - column:
+            name: url
+            type: varchar(200)
+            constraints:
+              nullable: false
+        - column:
+            name: create_timestamp
+            type: timestamp
+            defaultValueComputed: now()
+            constraints:
+              nullable: false
+
+    - createTable:
+        tableName: favorite_party
+        columns:
+        - column:
+            name: id
+            type: int
+            constraints:
+              primaryKey: true
+              unique: false
+        - column:
+            name: party_id
+            type: int
+        - column:
+            name: user_id
+            type: int
+
+    - createTable:
+        tableName: party_participant
+        columns:
+        - column:
+            name: id
+            type: int
+            constraints:
+              primaryKey: true
+              unique: false
+        - column:
+            name: party_id
+            type: int
+        - column:
+            name: user_id
+            type: int
+        - column:
+            type: timestamp
+            name: create_timestamp
+            defaultValueComputed: now()
+            constraints:
+              nullable: false
+
+- changeSet:
+    id: changelog-add-foreign-key-party-image
+    author: EldarS
+    objectQuotingStrategy: LEGACY
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: party_id
+        baseTableName: party_image
+        constraintName: fk_party_image_party
+        onDelete: CASCADE
+        onUpdate: RESTRICT
+        referencedColumnNames: id
+        referencedTableName: party
+
+- changeSet:
+    id: changelog-add-foreign-key-user-image
+    author: EldarS
+    objectQuotingStrategy: LEGACY
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: user_id
+        baseTableName: user_image
+        constraintName: fk_user_image_party
+        onDelete: CASCADE
+        onUpdate: RESTRICT
+        referencedColumnNames: id
+        referencedTableName: user
+
+- changeSet:
+    id: changelog-add-foreign-key-favorite-party-user
+    author: EldarS
+    objectQuotingStrategy: LEGACY
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: user_id
+        baseTableName: favorite_party
+        constraintName: fk_user_favorite_party
+        onDelete: CASCADE
+        onUpdate: RESTRICT
+        referencedColumnNames: id
+        referencedTableName: user
+
+- changeSet:
+    id: changelog-add-foreign-key-favorite-party-party
+    author: EldarS
+    objectQuotingStrategy: LEGACY
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: party_id
+        baseTableName: favorite_party
+        constraintName: fk_party_favorite_party
+        onDelete: CASCADE
+        onUpdate: RESTRICT
+        referencedColumnNames: id
+        referencedTableName: party
+
+- changeSet:
+    id: changelog-add-foreign-key-participant-party
+    author: EldarS
+    objectQuotingStrategy: LEGACY
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: party_id
+        baseTableName: party_participant
+        constraintName: fk_participant_party
+        onDelete: CASCADE
+        onUpdate: RESTRICT
+        referencedColumnNames: id
+        referencedTableName: party
+
+- changeSet:
+    id: changelog-add-foreign-key-participant-user
+    author: EldarS
+    objectQuotingStrategy: LEGACY
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: user_id
+        baseTableName: party_participant
+        constraintName: fk_participant_user
+        onDelete: CASCADE
+        onUpdate: RESTRICT
+        referencedColumnNames: id
+        referencedTableName: user
