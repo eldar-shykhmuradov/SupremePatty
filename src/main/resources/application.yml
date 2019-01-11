@@ -11,7 +11,3 @@ spring:
         url: ${datasource_url}
         username: ${datasource_username}
         password: ${datasource_password}
-    jpa:
-        database-platform: org.hibernate.dialect.PostgreSQLDialect
-        hibernate:
-            ddl-auto: none

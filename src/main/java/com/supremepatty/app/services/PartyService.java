@@ -4,15 +4,17 @@ import com.supremepatty.app.models.requests.PartiesSearchFilter;
 import com.supremepatty.app.models.requests.PartyRequest;
 import com.supremepatty.app.models.responses.PartiesResponse;
 import com.supremepatty.app.models.responses.PartyResponse;
+import com.supremepatty.app.repositories.PartyRepository;
+import lombok.Data;
 import org.springframework.stereotype.Service;
 
-import javax.validation.Valid;
-
 @Service
+@Data
 public class PartyService {
 
-    public PartiesResponse getParties(PartiesSearchFilter searchFilter) {
+    private final PartyRepository partyRepository;
 
+    public PartiesResponse getParties(PartiesSearchFilter searchFilter) {
         return null;
     }
 

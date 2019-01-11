@@ -7,6 +7,7 @@ plugins {
     id 'com.bmuschko.docker-remote-api' version '3.6.1' apply true
     id 'net.ltgt.apt' version '0.10'
     id "org.sonarqube" version "2.6"
+    id "nu.studer.jooq" version "3.0.2"
 }
 
 
@@ -20,6 +21,7 @@ repositories {
 dependencies {
     implementation 'org.springframework.boot:spring-boot-dependencies:2.0.5.RELEASE'
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-jooq'
     
     compileOnly 'org.projectlombok:lombok:1.18.4'
     apt 'org.projectlombok:lombok:1.18.4'
@@ -29,11 +31,15 @@ dependencies {
     
     compile group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
     compile "io.springfox:springfox-swagger2:2.9.2"
-
-    compile 'org.springframework.boot:spring-boot-starter-data-jpa'
+    
     compile 'org.postgresql:postgresql'
-
     compile group: 'org.liquibase', name: 'liquibase-core'
+    jooqRuntime 'postgresql:postgresql:9.1-901.jdbc4'
+
+
+    compile('javax.xml.bind:jaxb-api:2.3.0')
+    compile('javax.activation:activation:1.1')
+    compile('org.glassfish.jaxb:jaxb-runtime:2.3.0')
 
     components {
         withModule('org.springframework:spring-beans') {
@@ -46,6 +52,45 @@ dependencies {
         }
     }
 }
+
+
+def datasource_url = System.getenv('DATASOURCE_URL')
+def datasource_username = System.getenv('DATASOURCE_USERNAME')
+def datasource_password = System.getenv('DATASOURCE_PASSWORD')
+
+
+jooq {
+    supremePatty(sourceSets.main) {
+        jdbc {
+            driver = 'org.postgresql.Driver'
+            url = datasource_url
+            user = datasource_username
+            password = datasource_password
+        }
+        generator {
+            name = 'org.jooq.codegen.DefaultGenerator'
+            strategy {
+                name = 'org.jooq.codegen.DefaultGeneratorStrategy'
+            }
+            database {
+                name = 'org.jooq.meta.postgres.PostgresDatabase'
+                inputSchema = 'public'
+            }
+            generate {
+                relations = true
+                deprecated = false
+                records = true
+                immutablePojos = false
+                fluentSetters = true
+            }
+            target {
+                packageName = 'com.supremepatty.app.jooq'
+                directory = 'src/main/generated/java'
+            }
+        }
+    }
+}
+
 
 bootJar {
     baseName = 'SupremePatty'

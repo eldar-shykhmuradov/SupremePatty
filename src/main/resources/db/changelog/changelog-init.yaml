@@ -26,7 +26,6 @@ databaseChangeLog:
             type: varchar(200)
             constraints:
               nullable: false
-              primaryKey: true
         - column:
             name: latitude
             type: double
